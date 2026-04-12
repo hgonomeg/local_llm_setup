@@ -18,7 +18,7 @@
   },
   "permission": {
     "bash": "ask",
-  }
+  },
   "mcp": {
     "web-search": {
       "type": "local",
