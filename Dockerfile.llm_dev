@@ -57,9 +57,10 @@ RUN pacman -S --noconfirm --needed \
     biber
 
 # ── Bake default configs into /etc/skel
-# Todo: auto-generate opencode.json
-COPY llm_dev_configs/opencode.json /etc/skel/.config/opencode/opencode.json
+COPY llm_dev_configs/opencode.json.template /etc/skel/.config/opencode/opencode.json
 COPY llm_dev_configs/bashrc        /etc/skel/.bashrc
+COPY generate_opencode_config.sh /generate_opencode_config.sh
+RUN chmod +x /generate_opencode_config.sh
 
 RUN pacman -Scc --noconfirm
     

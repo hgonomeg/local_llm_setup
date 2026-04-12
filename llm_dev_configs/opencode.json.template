@@ -1,0 +1,19 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": {
+        "baseURL": "http://ollama_palace:11434/v1"
+      },
+      "models": {
+
+      }
+    }
+  },
+  "compaction": {
+    "auto": true,
+    "prune": true
+  }
+}

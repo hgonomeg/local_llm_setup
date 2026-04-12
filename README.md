@@ -28,8 +28,8 @@ docker exec ollama_palace bash /ollama_palace_init.sh
 docker compose build llm_dev
 
 # 4. Spawn a dev container
-docker compose run --rm llm_dev -v `pwd`:/workspace
-docker compose run --rm llm_dev -v /path/to/project:/workspace
+docker compose run --rm -v `pwd`:/workspace llm_dev
+docker compose run --rm -v /path/to/project:/workspace llm_dev
 ```
 
 ## Available Models
@@ -51,12 +51,12 @@ Each base model has 32K, 64K, and 128K context variants:
 docker compose up -d ollama_palace
 
 # Spawn a fresh dev shell
-docker compose run --rm llm_dev -v `pwd`:/workspace
+docker compose run --rm -v /path/to/project:/workspace llm_dev
 
 # Inside the container:
 opencode                    # Launch OpenCode agent
 models                      # List all available models
-gpu                         # Show loaded models + GPU usage
+ollama-ps                   # Show loaded models + GPU usage
 ollama-test gemma4-26b-64k  # Benchmark a model
 
 ```
