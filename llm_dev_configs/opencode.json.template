@@ -15,5 +15,12 @@
   "compaction": {
     "auto": true,
     "prune": true
+  },
+  "mcp": {
+    "web-search": {
+      "type": "local",
+      "command": ["npx", "-y", "@nicekurt/duckduckgo-mcp-server"],
+      "enabled": true
   }
+
 }
