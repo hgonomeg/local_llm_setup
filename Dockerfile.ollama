@@ -1,0 +1,3 @@
+FROM ollama/ollama:latest
+COPY ./ollama_palace_init.sh /ollama_palace_init.sh
+RUN chmod +x /ollama_palace_init.sh

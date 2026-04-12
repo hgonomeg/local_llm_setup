@@ -1,0 +1,6 @@
+# Workspace contents are user projects
+# workspace/*
+# !workspace/.gitkeep
+
+# Docker build cache
+.docker/

@@ -1,0 +1,87 @@
+# =============================================================================
+# Dockerfile.llm_dev — Arch Linux AI Development Workstation
+#
+# Full C/C++/Rust/Python/Node/LaTeX/Emscripten toolchain + OpenCode + web search
+# Designed to be spawned as throwaway containers against an Ollama server.
+# =============================================================================
+FROM archlinux:base-devel
+
+# ── Initialize pacman keyring and do full system upgrade ──────────────────
+RUN pacman-key --init && \
+    pacman-key --populate archlinux && \
+    pacman -Syu --noconfirm
+
+# ── Core system utilities ────────────────────────────────────────────────
+RUN pacman -S --noconfirm --needed \
+    sudo curl wget git openssh jq ripgrep fd bat eza tree less unzip zip \
+    htop btop strace lsof inetutils iputils bind-tools \
+    man-db man-pages
+
+# ── Editors ──────────────────────────────────────────────────────────────
+RUN pacman -S --noconfirm --needed \
+    vim helix
+
+# ── C / C++ / Fortran toolchain ─────────────────────────────────────────
+RUN pacman -S --noconfirm --needed \
+    gcc clang lld lldb gdb \
+    gcc-fortran \
+    cmake meson ninja \
+    pkg-config autoconf automake libtool \
+    valgrind
+
+# ── Rust ─────────────────────────────────────────────────────────────────
+RUN pacman -S --noconfirm --needed \
+    rustup && \
+    rustup default stable && \
+    rustup component add rust-analyzer
+
+# ── Python ───────────────────────────────────────────────────────────────
+RUN pacman -S --noconfirm --needed \
+    python python-pip python-virtualenv python-pipx
+
+# ── Node.js + TypeScript ─────────────────────────────────────────────────
+RUN pacman -S --noconfirm --needed \
+    nodejs npm typescript
+
+# ── Emscripten ──────────────────────────────────────────────────────────
+RUN pacman -S --noconfirm --needed \
+    emscripten
+
+# ── LaTeX (full installation via texlive) ────────────────────────────────
+RUN pacman -S --noconfirm --needed \
+    texlive-basic texlive-bin texlive-binextra \
+    texlive-fontsrecommended texlive-fontsextra \
+    texlive-latexrecommended texlive-latexextra \
+    texlive-mathscience texlive-pictures \
+    texlive-bibtexextra texlive-plaingeneric \
+    biber
+
+# ── Bake default configs into /etc/skel
+# Todo: auto-generate opencode.json
+COPY llm_dev_configs/opencode.json /etc/skel/.config/opencode/opencode.json
+COPY llm_dev_configs/bashrc        /etc/skel/.bashrc
+
+RUN pacman -Scc --noconfirm
+    
+# ── 9. Create non-root dev user with sudo ──────────────────────────────────
+RUN useradd -m -s /bin/bash -G wheel dev && \
+    echo "dev ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/dev && \
+    chmod 0440 /etc/sudoers.d/dev
+
+    RUN mkdir /workspace && chown dev:dev /workspace
+
+# ── 10. Switch to dev user for remaining setup ─────────────────────────────
+USER dev
+WORKDIR /home/dev
+ENV HOME=/home/dev
+
+# ── 11. Install OpenCode ───────────────────────────────────────────────────
+RUN curl -fsSL https://opencode.ai/install | bash
+ENV PATH="/home/dev/.opencode/bin:${PATH}"
+RUN opencode plugin @tarquinen/opencode-dcp
+
+RUN git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si --noconfirm && cd .. && rm -rf yay
+
+WORKDIR /workspace
+
+CMD ["/bin/bash"]
