@@ -69,7 +69,7 @@ RUN useradd -m -s /bin/bash -G wheel dev && \
     echo "dev ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/dev && \
     chmod 0440 /etc/sudoers.d/dev
 
-    RUN mkdir /workspace && chown dev:dev /workspace
+RUN mkdir /workspace && chown dev:dev /workspace
 
 # ── 10. Switch to dev user for remaining setup ─────────────────────────────
 USER dev
