@@ -16,6 +16,9 @@
     "auto": true,
     "prune": true
   },
+  "permission": {
+    "bash": "ask",
+  }
   "mcp": {
     "web-search": {
       "type": "local",
