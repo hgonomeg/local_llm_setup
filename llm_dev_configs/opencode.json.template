@@ -17,7 +17,7 @@
     "prune": true
   },
   "permission": {
-    "bash": "ask",
+    "bash": "ask"
   },
   "mcp": {
     "web-search": {
