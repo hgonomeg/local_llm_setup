@@ -22,7 +22,7 @@
   "mcp": {
     "web-search": {
       "type": "local",
-      "command": ["npx", "-y", "@nicekurt/duckduckgo-mcp-server"],
+      "command": ["npx", "-y", "duckduckgo-mcp-server"],
       "enabled": true
     }
   }
