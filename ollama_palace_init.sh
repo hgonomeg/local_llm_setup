@@ -15,11 +15,14 @@ echo " Server: ${OLLAMA_HOST}"
 echo "============================================="
 
 # ── 1. Pull base models ─────────────────────────────────────────────────────
+
+ # "qwen3.5:27b" is a bit slow on my hardware
+ # So is "gemma4:31b"
 BASE_MODELS=(
+  "qwen3.5:4b"
   "qwen3.5:9b"
   "qwen3.5:35b-a3b"
   "gemma4:26b"
-  "gemma4:31b"
   "gemma4:e4b"
 )
 
