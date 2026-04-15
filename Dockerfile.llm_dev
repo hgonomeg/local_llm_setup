@@ -64,7 +64,7 @@ RUN chmod +x /generate_opencode_config.sh
 
 RUN pacman -Scc --noconfirm
     
-# ── 9. Create non-root dev user with sudo ──────────────────────────────────
+# ── Create non-root dev user with sudo ──────────────────────────────────
 RUN useradd -m -s /bin/bash -G wheel dev && \
     echo "dev ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/dev && \
     chmod 0440 /etc/sudoers.d/dev
@@ -76,12 +76,14 @@ USER dev
 WORKDIR /home/dev
 ENV HOME=/home/dev
 
-# ── 11. Install OpenCode ───────────────────────────────────────────────────
+# ── Install non-root tools ───────────────────────────────────────────────────
+RUN git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si --noconfirm && cd .. && rm -rf yay
 RUN curl -fsSL https://opencode.ai/install | bash
+## Also add Claude
+RUN curl -fsSL https://claude.ai/install.sh | bash
 ENV PATH="/home/dev/.opencode/bin:${PATH}"
 RUN opencode plugin @tarquinen/opencode-dcp
 
-RUN git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si --noconfirm && cd .. && rm -rf yay
 
 WORKDIR /workspace
 
