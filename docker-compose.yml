@@ -63,15 +63,38 @@ services:
     depends_on:
       ollama_palace:
         condition: service_healthy
+      searxng_llm:
+        condition: service_started
     volumes:
-      # Do I need this?
-      #- ./workspace:/workspace
       - ${HOME}/.gitconfig:/home/dev/.gitconfig:ro
-      #- ${HOME}/.ssh:/home/dev/.ssh:ro
     environment:
       - OLLAMA_HOST=http://ollama_palace:11434
       - TERM=xterm-256color
     working_dir: /workspace
+    networks:
+      - llm_net
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Searxng — Container to host Searxng
+  # ──────────────────────────────────────────────────────────────────────────
+  searxng_llm:
+    image: searxng/searxng:latest
+    container_name: searxng_llm
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8888:8080"
+    volumes:
+      - ./searxng_configs:/etc/searxng:rw
+      - searxng_cache:/var/cache/searxng:rw
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8888/
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
     networks:
       - llm_net
 
@@ -83,6 +106,13 @@ volumes:
       type: none
       o: bind
       device: /magazyn/piwnica/ollama_data_volume
+  searxng_cache:
+    name: searxng_cache
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /magazyn/piwnica/searxng_cache_volume
 
 networks:
   llm_net:

@@ -20,10 +20,13 @@
     "bash": "ask"
   },
   "mcp": {
-    "web-search": {
+    "searxng": {
       "type": "local",
-      "command": ["npx", "-y", "duckduckgo-mcp-server"],
-      "enabled": true
+      "command": ["npx", "-y", "mcp-searxng"],
+      "enabled": true,
+      "environment": {
+        "SEARXNG_URL": "http://searxng_llm:8080"
+      }
     }
   }
 

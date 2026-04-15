@@ -1,0 +1,12 @@
+use_default_settings: true
+
+server:
+  # Generate with: openssl rand -hex 32
+  # sed "s|CHANGE_ME|$(openssl rand -hex 32)|" searxng_configs/settings.yml.template | grep -v sed | grep -v Generate > searxng_configs/settings.yml
+  secret_key: "CHANGE_ME"
+  bind_address: "0.0.0.0:8080"
+
+search:
+  # json MUST be enabled or MCP servers can't use the API
+  formats: [html, json]
+  safe_search: 1
