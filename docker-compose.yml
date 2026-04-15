@@ -21,9 +21,9 @@ services:
     restart: unless-stopped
     ports:
       - "127.0.0.1:11434:11434"
-      - "172.23.215.20:11434:11434"
-      - "192.168.192.4:11434:11434"
-      - "192.168.122.1:11434:11434"
+      # - "172.23.215.20:11434:11434"
+      # - "192.168.192.4:11434:11434"
+      # - "192.168.122.1:11434:11434"
       #- ""
     volumes:
       - ollama_data:/root/.ollama
@@ -101,18 +101,20 @@ services:
 volumes:
   ollama_data:
     name: ollama_data
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /magazyn/piwnica/ollama_data_volume
+    ## Custom path config
+    # driver: local
+    # driver_opts:
+    #   type: none
+    #   o: bind
+    #   device: /magazyn/piwnica/ollama_data_volume
   searxng_cache:
     name: searxng_cache
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /magazyn/piwnica/searxng_cache_volume
+    ## Custom path config
+    # driver: local
+    # driver_opts:
+    #   type: none
+    #   o: bind
+    #   device: /magazyn/piwnica/searxng_cache_volume
 
 networks:
   llm_net:
