@@ -38,6 +38,30 @@ docker compose run --rm -v `pwd`:/workspace llm_dev
 docker compose run --rm -v /path/to/project:/workspace llm_dev
 ```
 
+To your `.bashrc` / `.zshrc` add this:
+
+```bash
+### This lets you automate spawning llm dev contaniers in the current working directory available immediately at /workspace
+function spawn_llm_dev_container_here() {
+  HERE=`pwd`
+  CONTAINER_NAME="$(echo $HERE | md5sum |  cut -d ' ' -f 1)_llm_dev"
+  LOCAL_LLM_SETUP_REPO=/path/to/local_llm_setup
+  echo Container name: $CONTAINER_NAME
+  pushd $LOCAL_LLM_SETUP_REPO && (
+    if docker container ls | grep -q "$CONTAINER_NAME"; then
+      echo Using existent container
+      docker exec -it $CONTAINER_NAME bash
+    else
+      echo Creating new container
+      docker compose run --rm --name $CONTAINER_NAME -it -v ${HERE}:/workspace llm_dev
+    fi
+  )
+  popd
+}
+
+  
+```
+
 ## Available Models
 
 Each base model has 16K, 32K, 64K, and 128K context variants:
