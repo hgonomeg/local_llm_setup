@@ -27,6 +27,7 @@ BASE_MODELS=(
 )
 
 declare -A CTX_SIZES=(
+ [16k]=16384
  [32k]=32768
  [64k]=65536
  [128k]=131072
