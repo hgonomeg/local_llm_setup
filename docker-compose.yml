@@ -108,7 +108,7 @@ services:
       # port on the right is container-local
       # port on the left is systemwide port
       - "127.0.0.1:11436:8080"
-      - "172.23.215.20:11436:8080"
+      # - "172.23.215.20:11436:8080"
     volumes:
       - openwebui_data:/app/backend/data
     environment:
