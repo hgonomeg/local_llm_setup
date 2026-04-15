@@ -22,9 +22,9 @@ docker compose build ollama_palace
 # 1. Start the Ollama server
 docker compose up -d ollama_palace
 
-# 2.1. Create configuration for the Searxng container
+# 2.1. Create configuration for the Searxng container (for web searches in the dev container)
 sed "s|CHANGE_ME|$(openssl rand -hex 32)|" searxng_configs/settings.yml.template | grep -v sed | grep -v Generate > searxng_configs/settings.yml
-# 2.2. Start the Searxng container
+# 2.2. Start the Searxng container (for web searches in the dev container)
 docker compose up -d searxng_llm
 
 # 2. Pull all models and create context-size variants (~80GB download)
@@ -36,6 +36,9 @@ docker compose build llm_dev
 # 4. Spawn a dev container
 docker compose run --rm -v `pwd`:/workspace llm_dev
 docker compose run --rm -v /path/to/project:/workspace llm_dev
+
+# Optionally you can also set up a nice web UI for Ollama
+docker compose up -d open_webui
 ```
 
 To your `.bashrc` / `.zshrc` add this:
