@@ -16,10 +16,16 @@ Local, GPU-accelerated LLM development environment using Docker.
 
 ```bash
 
+# 0. Build the ollama host container
 docker compose build ollama_palace
 
 # 1. Start the Ollama server
 docker compose up -d ollama_palace
+
+# 2.1. Create configuration for the Searxng container
+sed "s|CHANGE_ME|$(openssl rand -hex 32)|" searxng_configs/settings.yml.template | grep -v sed | grep -v Generate > searxng_configs/settings.yml
+# 2.2. Start the Searxng container
+docker compose up -d searxng_llm
 
 # 2. Pull all models and create context-size variants (~80GB download)
 docker exec ollama_palace bash /ollama_palace_init.sh
@@ -34,7 +40,7 @@ docker compose run --rm -v /path/to/project:/workspace llm_dev
 
 ## Available Models
 
-Each base model has 32K, 64K, and 128K context variants:
+Each base model has 16K, 32K, 64K, and 128K context variants:
 
 | Model | Type | Active Params | Download | Best for |
 |-------|------|--------------|----------|----------|
