@@ -2,7 +2,7 @@
 
 Local, GPU-accelerated LLM development environment using Docker.
 
-**Ollama** serves models (Qwen 3.5, Gemma 4) with NVIDIA GPU passthrough.
+**Ollama** serves models (Qwen 3.5, Qwen 3.6, Gemma 4) with NVIDIA GPU passthrough.
 **Arch Linux** container provides a full dev toolchain + OpenCode agentic coding.
 
 ## Prerequisites
@@ -48,15 +48,25 @@ To your `.bashrc` / `.zshrc` add this:
 function spawn_llm_dev_container_here() {
   HERE=`pwd`
   CONTAINER_NAME="$(echo $HERE | md5sum |  cut -d ' ' -f 1)_llm_dev"
-  LOCAL_LLM_SETUP_REPO=/path/to/local_llm_setup
+  LOCAL_LLM_SETUP_REPO=/path/to/local_llm_setup # Replace this with your local path
+  DOCKER_CMD="docker" # You may need to change that if you want `sudo`
   echo Container name: $CONTAINER_NAME
+  if [ "$1" = "--persist" ]; then
+    RM_FLAG=""
+  else
+    RM_FLAG="--rm"
+  fi
   pushd $LOCAL_LLM_SETUP_REPO && (
-    if docker container ls | grep -q "$CONTAINER_NAME"; then
+    if $DOCKER_CMD container ls -a --format "{{.Names}}" | grep -q "$CONTAINER_NAME"; then
       echo Using existent container
-      docker exec -it $CONTAINER_NAME bash
+      if [ $($DOCKER_CMD container inspect $CONTAINER_NAME --format "{{.State.Status}}") != "running" ]; then
+        echo Container is not running. Needs to be started.
+        $DOCKER_CMD container start $CONTAINER_NAME
+      fi
+      $DOCKER_CMD exec -it $CONTAINER_NAME bash
     else
       echo Creating new container
-      docker compose run --rm --name $CONTAINER_NAME -it -v ${HERE}:/workspace llm_dev
+      $DOCKER_CMD compose run $RM_FLAG --name $CONTAINER_NAME -it -v ${HERE}:/workspace llm_dev
     fi
   )
   popd
