@@ -2,7 +2,7 @@
 
 Local, GPU-accelerated LLM development environment using Docker.
 
-**Ollama** serves models (Qwen 3.5, Gemma 4) with NVIDIA GPU passthrough.
+**Ollama** serves models (Qwen 3.5, Qwen 3.6, Gemma 4) with NVIDIA GPU passthrough.
 **Arch Linux** container provides a full dev toolchain + OpenCode agentic coding.
 
 ## Prerequisites
@@ -51,7 +51,7 @@ function spawn_llm_dev_container_here() {
   LOCAL_LLM_SETUP_REPO=/path/to/local_llm_setup
   echo Container name: $CONTAINER_NAME
   pushd $LOCAL_LLM_SETUP_REPO && (
-    if docker container ls | grep -q "$CONTAINER_NAME"; then
+    if docker container ls -a | grep -q "$CONTAINER_NAME"; then
       echo Using existent container
       docker exec -it $CONTAINER_NAME bash
     else
