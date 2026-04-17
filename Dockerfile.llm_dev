@@ -58,18 +58,20 @@ RUN pacman -S --noconfirm --needed \
 
 # ── ZSH stuff ────────────────────────────────
 RUN pacman -S --noconfirm --needed zsh zsh-autosuggestions \
-    zsh-history-substring-search zsh-syntax-highlighting
+    zsh-history-substring-search zsh-syntax-highlighting \
+    zsh-completions
 
 # ── Bake default configs into /etc/skel
 COPY llm_dev_configs/opencode.json.template /etc/skel/.config/opencode/opencode.json
 COPY llm_dev_configs/bashrc        /etc/skel/.bashrc
+COPY llm_dev_configs/zshrc        /etc/skel/.zshrc
 COPY generate_opencode_config.sh /generate_opencode_config.sh
 RUN chmod +x /generate_opencode_config.sh
 
 RUN pacman -Scc --noconfirm
     
 # ── Create non-root dev user with sudo ──────────────────────────────────
-RUN useradd -m -s /bin/bash -G wheel dev && \
+RUN useradd -m -s /bin/zsh -G wheel dev && \
     echo "dev ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/dev && \
     chmod 0440 /etc/sudoers.d/dev
 
