@@ -11,11 +11,11 @@ RUN pacman-key --init && \
     pacman-key --populate archlinux && \
     pacman -Syu --noconfirm
 
-# ── Core system utilities ────────────────────────────────────────────────
+# ── Core system utilities and  terminal goodies ─────────────────────────
 RUN pacman -S --noconfirm --needed \
     sudo curl wget git openssh jq ripgrep fd bat eza tree less unzip zip \
     htop btop strace lsof inetutils iputils bind-tools \
-    man-db man-pages
+    man-db man-pages git-extras dfrs the_silver_searcher
 
 # ── Editors ──────────────────────────────────────────────────────────────
 RUN pacman -S --noconfirm --needed \

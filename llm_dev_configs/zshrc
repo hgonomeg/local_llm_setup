@@ -4,8 +4,19 @@ source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-# TODO: Port prompt from Bash:
-# PS1='\[\e[1;34m\]llm-dev\[\e[0m\]:\[\e[1;32m\]\w\[\e[0m\]\$ '
+source /usr/share/doc/git-extras/git-extras-completion.zsh
+. /usr/share/fzf/fzf-extras.zsh
+
+# TODO: Consider oh-my-zsh? Some more plugins - (zsh-interactive-cd, vi-mode, zsh-navigation-tools?, z?)?
+
+setopt PROMPT_SUBST
+autoload -Uz vcs_info
+add-zsh-hook precmd vcs_info
+zstyle ':vcs_info:git:*' formats ' (%b)'
+zstyle ':vcs_info:*' enable git
+
+PS1='%{%B%F{blue}%}llm-dev%{%f%b%}:%{%B%F{green}%}%~%{%f%b%}%{%F{yellow}%}${vcs_info_msg_0_}%{%f%}%# '
+# PS1='%{%B%F{blue}%}llm-dev%{%f%b%}:%{%B%F{green}%}%~%{%f%b%}%# '
 
 
 # ── Aliases ─────────────────────────────────────────────────────────────────
