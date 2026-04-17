@@ -131,6 +131,8 @@ services:
     depends_on:
       ollama_palace:
         condition: service_healthy
+      searxng_llm:
+        condition: service_started
     networks:
       - llm_net
 
