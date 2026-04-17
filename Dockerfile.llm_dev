@@ -83,7 +83,7 @@ ENV HOME=/home/dev
 
 # ── Install non-root tools ───────────────────────────────────────────────────
 RUN git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si --noconfirm && cd .. && rm -rf yay
-RUN yay -S --noconfirm --needed git-extras
+RUN yay -S --noconfirm --needed git-extras fzf-extras
 RUN curl -fsSL https://opencode.ai/install | bash
 ## Also add Claude
 RUN curl -fsSL https://claude.ai/install.sh | bash
