@@ -24,6 +24,13 @@ ollama-test() {
     | jq '{model, eval_count, eval_duration_ms: (.eval_duration/1000000|round), tokens_per_sec: ((.eval_count / .eval_duration) * 1000000000 | round)}'
 }
 
+ollama_claude() {
+    export ANTHROPIC_AUTH_TOKEN=ollama
+    export ANTHROPIC_API_KEY=""
+    export ANTHROPIC_BASE_URL="http://172.23.215.20:11434"
+    claude "$@"
+}
+
 # ── Environment ─────────────────────────────────────────────────────────────
 export EDITOR=hx
 export VISUAL=hx
@@ -38,11 +45,12 @@ export PATH="$HOME/.local/bin:$HOME/.opencode/bin:$HOME/bin:$PATH"
 /generate_opencode_config.sh
 
 # ── Greeting ────────────────────────────────────────────────────────────────
-echo "┌─────────────────────────────────────────────────┐"
-echo "│  AI Dev Container (Arch Linux)                  │"
-echo "│                                                 │"
-echo "│  models     — list available Ollama models      │"
-echo "│  ollama-ps  — show loaded models + GPU usage    │"
-echo "│  oc / opencode — launch OpenCode agent          │"
-echo "│  ollama-test [model] — benchmark a model        │"
-echo "└─────────────────────────────────────────────────┘"
+echo "┌─────────────────────────────────────────────────────────────────────────┐"
+echo "│  LLM Dev Container (Arch Linux)                                         │"
+echo "│                                                                         │"
+echo "│  models     — list available Ollama models                              │"
+echo "│  ollama-ps  — show loaded models + GPU usage                            │"
+echo "│  oc / opencode — launch OpenCode agent                                  │"
+echo "|  ollama_claude --model [model] - launch Claude Code with local LLMs     |"
+echo "│  ollama-test [model] — benchmark a model                                │"
+echo "└─────────────────────────────────────────────────────────────────────────┘"
