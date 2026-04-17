@@ -113,6 +113,16 @@ services:
       - openwebui_data:/app/backend/data
     environment:
       - OLLAMA_BASE_URL=http://ollama_palace:11434
+      - ENABLE_RAG_WEB_SEARCH=true
+      - RAG_WEB_SEARCH_ENGINE="searxng"
+      - SEARXNG_QUERY_URL="http://searxng_llm:8080/search?q=<query>"
+      - WEB_SEARCH_RESULT_COUNT=12
+      - WEB_SEARCH_CONCURRENT_REQUESTS=10
+      # Not needed, rigt?
+      # - WEB_SEARCH_TRUST_ENV=true
+      # This is the stupidest default I've seen, ever
+      # It makes the search unusable if not set
+      - BYPASS_WEB_SEARCH_EMBEDDING_AND_RETRIEVAL=true
       - WEBUI_AUTH=False # skip login for single-user
     depends_on:
       ollama_palace:
