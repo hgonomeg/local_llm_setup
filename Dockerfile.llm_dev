@@ -63,7 +63,6 @@ RUN pacman -S --noconfirm --needed zsh zsh-autosuggestions \
 
 # ── Bake default configs into /etc/skel
 COPY llm_dev_configs/opencode.json.template /etc/skel/.config/opencode/opencode.json
-COPY llm_dev_configs/bashrc        /etc/skel/.bashrc
 COPY llm_dev_configs/zshrc        /etc/skel/.zshrc
 COPY generate_opencode_config.sh /generate_opencode_config.sh
 RUN chmod +x /generate_opencode_config.sh
@@ -93,4 +92,4 @@ RUN opencode plugin @tarquinen/opencode-dcp
 
 WORKDIR /workspace
 
-CMD ["/bin/bash"]
+CMD ["/bin/zsh"]
