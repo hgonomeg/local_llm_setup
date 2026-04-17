@@ -126,6 +126,8 @@ services:
       # This is the stupidest default I've seen, ever
       # It makes the search unusable if not set
       - BYPASS_WEB_SEARCH_EMBEDDING_AND_RETRIEVAL=true
+      # This for the Documents lookup. YMMV
+      - BYPASS_EMBEDDING_AND_RETRIEVAL=true
     depends_on:
       ollama_palace:
         condition: service_healthy
