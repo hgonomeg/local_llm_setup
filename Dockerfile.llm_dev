@@ -11,15 +11,15 @@ RUN pacman-key --init && \
     pacman-key --populate archlinux && \
     pacman -Syu --noconfirm
 
-# ── Core system utilities ────────────────────────────────────────────────
+# ── Core system utilities and  terminal goodies ─────────────────────────
 RUN pacman -S --noconfirm --needed \
     sudo curl wget git openssh jq ripgrep fd bat eza tree less unzip zip \
     htop btop strace lsof inetutils iputils bind-tools \
-    man-db man-pages
+    man-db man-pages dfrs the_silver_searcher fzf
 
 # ── Editors ──────────────────────────────────────────────────────────────
 RUN pacman -S --noconfirm --needed \
-    vim helix
+    vim helix neovim
 
 # ── C / C++ / Fortran toolchain ─────────────────────────────────────────
 RUN pacman -S --noconfirm --needed \
@@ -56,16 +56,21 @@ RUN pacman -S --noconfirm --needed \
     texlive-bibtexextra texlive-plaingeneric \
     biber
 
+# ── ZSH stuff ────────────────────────────────
+RUN pacman -S --noconfirm --needed zsh zsh-autosuggestions \
+    zsh-history-substring-search zsh-syntax-highlighting \
+    zsh-completions
+
 # ── Bake default configs into /etc/skel
 COPY llm_dev_configs/opencode.json.template /etc/skel/.config/opencode/opencode.json
-COPY llm_dev_configs/bashrc        /etc/skel/.bashrc
+COPY llm_dev_configs/zshrc        /etc/skel/.zshrc
 COPY generate_opencode_config.sh /generate_opencode_config.sh
 RUN chmod +x /generate_opencode_config.sh
 
 RUN pacman -Scc --noconfirm
     
 # ── Create non-root dev user with sudo ──────────────────────────────────
-RUN useradd -m -s /bin/bash -G wheel dev && \
+RUN useradd -m -s /bin/zsh -G wheel dev && \
     echo "dev ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/dev && \
     chmod 0440 /etc/sudoers.d/dev
 
@@ -78,6 +83,7 @@ ENV HOME=/home/dev
 
 # ── Install non-root tools ───────────────────────────────────────────────────
 RUN git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si --noconfirm && cd .. && rm -rf yay
+RUN yay -S --noconfirm --needed git-extras fzf-extras
 RUN curl -fsSL https://opencode.ai/install | bash
 ## Also add Claude
 RUN curl -fsSL https://claude.ai/install.sh | bash
@@ -87,4 +93,4 @@ RUN opencode plugin @tarquinen/opencode-dcp
 
 WORKDIR /workspace
 
-CMD ["/bin/bash"]
+CMD ["/bin/zsh"]

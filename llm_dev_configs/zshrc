@@ -1,0 +1,84 @@
+# ~/.zshrc — LLM Dev Container
+
+source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# This package (git-extras) seems to be broken somehow...
+source /usr/share/doc/git-extras/git-extras-completion.zsh
+. /usr/share/fzf/fzf-extras.zsh
+
+# TODO: Consider oh-my-zsh? Some more plugins - (zsh-interactive-cd, vi-mode, zsh-navigation-tools?, z?)?
+
+
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+bindkey  "^[[H"   beginning-of-line
+bindkey  "^[[F"   end-of-line
+bindkey  "^[[3~"  delete-char
+# Doesn't this break editing multi-line functions?
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+
+setopt PROMPT_SUBST
+autoload -Uz vcs_info
+add-zsh-hook precmd vcs_info
+zstyle ':vcs_info:git:*' formats ' (%b)'
+zstyle ':vcs_info:*' enable git
+
+PS1='%{%B%F{blue}%}llm-dev%{%f%b%}:%{%B%F{green}%}%~%{%f%b%}%{%F{yellow}%}${vcs_info_msg_0_}%{%f%}%# '
+# PS1='%{%B%F{blue}%}llm-dev%{%f%b%}:%{%B%F{green}%}%~%{%f%b%}%# '
+
+export HISTFILE=~/.zsh_history
+
+# ── Aliases ─────────────────────────────────────────────────────────────────
+alias ls='eza --icons --group-directories-first'
+alias ll='eza -la --icons --group-directories-first'
+alias lt='eza -laT --icons --level=2'
+alias grep='rg'
+alias find='fd'
+
+# Ollama shortcuts
+alias models='curl -s http://ollama_palace:11434/api/tags | jq -r ".models[].name" | sort'
+alias ollama_ps='curl -s http://ollama_palace:11434/api/ps | jq .'
+# alias oc='opencode'
+
+# Quick model test
+ollama_test() {
+  local model="${1:-qwen3.5:35b-a3b-64k}"
+  echo "Testing ${model} ..."
+  curl -s http://ollama_palace:11434/api/generate \
+    -d "{\"model\":\"${model}\",\"prompt\":\"Say hello in one sentence.\",\"stream\":false}" \
+    | jq '{model, eval_count, eval_duration_ms: (.eval_duration/1000000|round), tokens_per_sec: ((.eval_count / .eval_duration) * 1000000000 | round)}'
+}
+
+ollama_claude() {
+    export ANTHROPIC_AUTH_TOKEN=ollama
+    export ANTHROPIC_API_KEY=""
+    export ANTHROPIC_BASE_URL="http://172.23.215.20:11434"
+    claude "$@"
+}
+
+# ── Environment ─────────────────────────────────────────────────────────────
+export EDITOR=hx
+export VISUAL=hx
+export OLLAMA_HOST=http://ollama_palace:11434
+
+# Rust
+[ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
+
+# Local bins
+export PATH="$HOME/.local/bin:$HOME/.opencode/bin:$HOME/bin:$PATH"
+
+/generate_opencode_config.sh
+
+# ── Greeting ────────────────────────────────────────────────────────────────
+echo "┌─────────────────────────────────────────────────────────────────────────┐"
+echo "│  LLM Dev Container (Arch Linux)                                         │"
+echo "│                                                                         │"
+echo "│  models                        — list available Ollama models           │"
+echo "│  ollama_ps                     — show loaded models + GPU usage         │"
+echo "│  oc / opencode                 — launch OpenCode agent                  │"
+echo "|  ollama_claude --model [model] - launch Claude Code with local LLMs     |"
+echo "│  ollama_test [model]           — benchmark a model                      │"
+echo "└─────────────────────────────────────────────────────────────────────────┘"

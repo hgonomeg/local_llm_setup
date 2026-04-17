@@ -17,7 +17,7 @@ Local, GPU-accelerated LLM development environment using Docker.
 ```bash
 
 # 0. Build the ollama host container
-docker compose build ollama_palace
+docker compose build --progress plain ollama_palace
 
 # 1. Start the Ollama server
 docker compose up -d ollama_palace
@@ -31,7 +31,7 @@ docker compose up -d searxng_llm
 docker exec ollama_palace bash /ollama_palace_init.sh
 
 # 3. Build the dev image
-docker compose build llm_dev
+docker compose build --progress plain llm_dev
 
 # 4. Spawn a dev container
 docker compose run --rm -v `pwd`:/workspace llm_dev
