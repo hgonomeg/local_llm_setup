@@ -15,7 +15,7 @@ RUN pacman-key --init && \
 RUN pacman -S --noconfirm --needed \
     sudo curl wget git openssh jq ripgrep fd bat eza tree less unzip zip \
     htop btop strace lsof inetutils iputils bind-tools \
-    man-db man-pages dfrs the_silver_searcher
+    man-db man-pages dfrs the_silver_searcher fzf
 
 # ── Editors ──────────────────────────────────────────────────────────────
 RUN pacman -S --noconfirm --needed \
