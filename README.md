@@ -81,10 +81,14 @@ Each base model has 16K, 32K, 64K, and 128K context variants:
 
 | Model | Type | Active Params | Download | Best for |
 |-------|------|--------------|----------|----------|
+| `qwen3.5-4b-*` | Dense | 4B | ? | Super-fast fallback |
 | `qwen3.5-9b-*` | Dense | 9B | ~6GB | Fast fallback, fits in 8GB VRAM |
+| `qwen3.5-27b-*` | Dense | 27B | ? | Agentic coding, tool use (better analysis; much slower) |
 | `qwen3.5-35b-a3b-*` | MoE | 3B | ~24GB | Agentic coding, tool use |
+| `qwen3.6-35b-a3b-*` | MoE | 3B | ? | Agentic coding, tool use |
 | `gemma4-26b-*` | MoE | 3.8B | ~18GB | Pure coding, multilingual |
 | `gemma4-e4b-*` | Dense | 4.5B | ~6GB | Ultra-fast, fits in 8GB VRAM |
+| `qemma4-31b-*` | Dense | 31B | ? | Agentic coding, tool use (better analysis; much slower) |
 
 
 ## Day-to-Day Usage
