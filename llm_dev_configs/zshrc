@@ -9,6 +9,13 @@ source /usr/share/doc/git-extras/git-extras-completion.zsh
 
 # TODO: Consider oh-my-zsh? Some more plugins - (zsh-interactive-cd, vi-mode, zsh-navigation-tools?, z?)?
 
+
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+bindkey  "^[[H"   beginning-of-line
+bindkey  "^[[F"   end-of-line
+bindkey  "^[[3~"  delete-char
+
 setopt PROMPT_SUBST
 autoload -Uz vcs_info
 add-zsh-hook precmd vcs_info
@@ -18,6 +25,7 @@ zstyle ':vcs_info:*' enable git
 PS1='%{%B%F{blue}%}llm-dev%{%f%b%}:%{%B%F{green}%}%~%{%f%b%}%{%F{yellow}%}${vcs_info_msg_0_}%{%f%}%# '
 # PS1='%{%B%F{blue}%}llm-dev%{%f%b%}:%{%B%F{green}%}%~%{%f%b%}%# '
 
+export HISTFILE=~/.zsh_history
 
 # ── Aliases ─────────────────────────────────────────────────────────────────
 alias ls='eza --icons --group-directories-first'
