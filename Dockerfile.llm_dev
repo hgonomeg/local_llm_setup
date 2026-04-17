@@ -19,7 +19,7 @@ RUN pacman -S --noconfirm --needed \
 
 # ── Editors ──────────────────────────────────────────────────────────────
 RUN pacman -S --noconfirm --needed \
-    vim helix
+    vim helix neovim
 
 # ── C / C++ / Fortran toolchain ─────────────────────────────────────────
 RUN pacman -S --noconfirm --needed \
@@ -55,6 +55,10 @@ RUN pacman -S --noconfirm --needed \
     texlive-mathscience texlive-pictures \
     texlive-bibtexextra texlive-plaingeneric \
     biber
+
+# ── ZSH stuff ────────────────────────────────
+RUN pacman -S --noconfirm --needed zsh zsh-autosuggestions \
+    zsh-history-substring-search zsh-syntax-highlighting
 
 # ── Bake default configs into /etc/skel
 COPY llm_dev_configs/opencode.json.template /etc/skel/.config/opencode/opencode.json
