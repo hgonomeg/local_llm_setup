@@ -77,7 +77,7 @@ function spawn_llm_dev_container_here() {
 
 ## Available Models
 
-Each base model has 16K, 32K, 64K, and 128K context variants:
+Each base model has 16K, 32K, 64K, 128K and 256K context variants:
 
 | Model | Type | Active Params | Download | Best for |
 |-------|------|--------------|----------|----------|
