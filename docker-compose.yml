@@ -37,7 +37,7 @@ services:
       resources:
         reservations:
           devices:
-            - driver: nvidia
+            - driver: nvidia # Consider adding support for non-nvidia setups?
               count: all
               capabilities: [gpu]
     healthcheck:
@@ -129,7 +129,7 @@ services:
       - WEB_SEARCH_RESULT_COUNT=8
       - WEB_SEARCH_CONCURRENT_REQUESTS=10
       # Not needed, rigt?
-      # - WEB_SEARCH_TRUST_ENV=true
+      # - WEB_SEARCH_TRUST_ENV=True
       # For a small list of fetched websites, this makes sense.
       # For an extensive list of fetched websites, this will lead to the model's context clogging.
       # Adjust this in the Admin panel when needed.
