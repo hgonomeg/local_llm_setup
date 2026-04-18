@@ -115,21 +115,31 @@ services:
     environment:
       - OLLAMA_BASE_URL=http://ollama_palace:11434
       - WEBUI_AUTH=False # skip login for single-user
-      - ENABLE_RAG_WEB_SEARCH=true
-      - ENABLE_WEB_SEARCH=true
+      # What does this do?? Is this used at all?
+      - ENABLE_RAG_WEB_SEARCH=True
+      - ENABLE_WEB_SEARCH=True
       - RAG_WEB_SEARCH_ENGINE="searxng"
+      - RAG_EMBEDDING_ENGINE="ollama"
+      - RAG_EMBEDDING_MODEL="qwen3-embedding:8b"
+      # The default of 3 is ridiculously bad
+      - RAG_TOP_K=8
       - SEARXNG_QUERY_URL="http://searxng_llm:8080/search?q=<query>"
       # This may need tinkering, especially without embedding+retrieval
       # Not to overwhelm the model context...
-      - WEB_SEARCH_RESULT_COUNT=12
+      - WEB_SEARCH_RESULT_COUNT=8
       - WEB_SEARCH_CONCURRENT_REQUESTS=10
       # Not needed, rigt?
       # - WEB_SEARCH_TRUST_ENV=true
-      # This is the stupidest default I've seen, ever
-      # It makes the search unusable if not set
-      - BYPASS_WEB_SEARCH_EMBEDDING_AND_RETRIEVAL=true
+      # For a small list of fetched websites, this makes sense.
+      # For an extensive list of fetched websites, this will lead to the model's context clogging.
+      # Adjust this in the Admin panel when needed.
+      - BYPASS_WEB_SEARCH_EMBEDDING_AND_RETRIEVAL=True
       # This for the Documents lookup. YMMV
-      - BYPASS_EMBEDDING_AND_RETRIEVAL=true
+      - BYPASS_EMBEDDING_AND_RETRIEVAL=True
+      # This eats up resources and gets in the way
+      - ENABLE_FOLLOW_UP_GENERATION=False
+      # This eats up reasources. Are tags really that useful?
+      - ENABLE_TAGS_GENERATION=False
     depends_on:
       ollama_palace:
         condition: service_healthy
