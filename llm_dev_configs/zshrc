@@ -36,7 +36,7 @@ alias ls='eza --icons --group-directories-first'
 alias ll='eza -la --icons --group-directories-first'
 alias lt='eza -laT --icons --level=2'
 alias grep='rg'
-alias find='fd'
+# alias find='fd'
 
 # Ollama shortcuts
 alias models='curl -s http://ollama_palace:11434/api/tags | jq -r ".models[].name" | sort'
@@ -79,6 +79,6 @@ echo "│                                                                       
 echo "│  models                        — list available Ollama models           │"
 echo "│  ollama_ps                     — show loaded models + GPU usage         │"
 echo "│  oc / opencode                 — launch OpenCode agent                  │"
-echo "|  ollama_claude --model [model] - launch Claude Code with local LLMs     |"
+echo "│  ollama_claude --model [model] - launch Claude Code with local LLMs     │"
 echo "│  ollama_test [model]           — benchmark a model                      │"
 echo "└─────────────────────────────────────────────────────────────────────────┘"

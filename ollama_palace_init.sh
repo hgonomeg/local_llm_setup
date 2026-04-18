@@ -32,12 +32,27 @@ declare -A CTX_SIZES=(
  [32k]=32768
  [64k]=65536
  [128k]=131072
+ [256k]=262144
 )
 
 for model in "${BASE_MODELS[@]}"; do
   echo ""
   echo "▸ Pulling ${model} ..."
   $OLLAMA pull "$model"
+done
+
+EMBEDDING_MODELS=(
+  "qwen3-embedding:4b"
+  "qwen3-embedding:8b"
+
+)
+
+echo "▸ Additionally, pulling embedding models..."
+
+for emb_model in "${EMBEDDING_MODELS[@]}"; do
+  echo ""
+  echo "▸ Pulling embdedding model: ${emb_model} ..."
+  $OLLAMA pull "$emb_model"
 done
 
 # ── 2. Create context-size variants from Modelfiles ─────────────────────────
