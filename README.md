@@ -63,7 +63,7 @@ function spawn_llm_dev_container_here() {
         echo Container is not running. Needs to be started.
         $DOCKER_CMD container start $CONTAINER_NAME
       fi
-      $DOCKER_CMD exec -it $CONTAINER_NAME bash
+      $DOCKER_CMD exec -it $CONTAINER_NAME zsh
     else
       echo Creating new container
       $DOCKER_CMD compose run $RM_FLAG --name $CONTAINER_NAME -it -v ${HERE}:/workspace llm_dev
