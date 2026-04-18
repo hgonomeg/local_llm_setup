@@ -36,7 +36,7 @@ alias ls='eza --icons --group-directories-first'
 alias ll='eza -la --icons --group-directories-first'
 alias lt='eza -laT --icons --level=2'
 alias grep='rg'
-alias find='fd'
+# alias find='fd'
 
 # Ollama shortcuts
 alias models='curl -s http://ollama_palace:11434/api/tags | jq -r ".models[].name" | sort'
