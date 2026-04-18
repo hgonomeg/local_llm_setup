@@ -79,6 +79,6 @@ echo "│                                                                       
 echo "│  models                        — list available Ollama models           │"
 echo "│  ollama_ps                     — show loaded models + GPU usage         │"
 echo "│  oc / opencode                 — launch OpenCode agent                  │"
-echo "|  ollama_claude --model [model] - launch Claude Code with local LLMs     |"
+echo "│  ollama_claude --model [model] - launch Claude Code with local LLMs     │"
 echo "│  ollama_test [model]           — benchmark a model                      │"
 echo "└─────────────────────────────────────────────────────────────────────────┘"
