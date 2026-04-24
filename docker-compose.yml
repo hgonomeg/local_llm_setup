@@ -32,6 +32,7 @@ services:
       - OLLAMA_KEEP_ALIVE=5m
       - OLLAMA_NUM_PARALLEL=3
       - OLLAMA_MAX_LOADED_MODELS=3
+      - OLLAMA_MAX_QUEUE=10
       - OLLAMA_FLASH_ATTENTION=1
     deploy:
       resources:
