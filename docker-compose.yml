@@ -87,6 +87,7 @@ services:
       # port on the left is systemwide port
       - "127.0.0.1:8888:8080"
       - "172.23.215.20:8888:8080"
+      - "192.168.122.1:8888:8080"
     volumes:
       - ./searxng_configs:/etc/searxng:rw
       - searxng_cache:/var/cache/searxng:rw
