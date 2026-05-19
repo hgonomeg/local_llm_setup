@@ -87,6 +87,7 @@ services:
       # port on the left is systemwide port
       - "127.0.0.1:8888:8080"
       # - "172.23.215.20:8888:8080"
+      # - "192.168.122.1:8888:8080"
     volumes:
       - ./searxng_configs:/etc/searxng:rw
       - searxng_cache:/var/cache/searxng:rw
@@ -116,10 +117,16 @@ services:
     environment:
       - OLLAMA_BASE_URL=http://ollama_palace:11434
       - WEBUI_AUTH=False # skip login for single-user
+      # The 'default' loader is just broken and instantly fails.
+      # We need to use playwright
+      - WEB_LOADER_ENGINE=playwright
+      - PLAYWRIGHT_WS_URL=ws://playwright:11437
       # What does this do?? Is this used at all?
       - ENABLE_RAG_WEB_SEARCH=True
       - ENABLE_WEB_SEARCH=True
       - RAG_WEB_SEARCH_ENGINE="searxng"
+      # is this used?
+      - WEB_SEARCH_ENGINE="searxng"
       - RAG_EMBEDDING_ENGINE="ollama"
       - RAG_EMBEDDING_MODEL="qwen3-embedding:8b"
       # The default of 3 is ridiculously bad
@@ -146,6 +153,16 @@ services:
         condition: service_healthy
       searxng_llm:
         condition: service_started
+      playwright:
+        condition: service_started
+    networks:
+      - llm_net
+      
+  playwright:
+    image: mcr.microsoft.com/playwright:v1.58.0-noble
+    container_name: playwright
+    restart: unless-stopped
+    command: npx -y playwright@1.58.0 run-server --port 11437 --host 0.0.0.0
     networks:
       - llm_net
 
