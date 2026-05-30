@@ -76,6 +76,10 @@ RUN useradd -m -s /bin/zsh -G wheel dev && \
 
 RUN mkdir /workspace && chown dev:dev /workspace
 
+# ── Build-time secrets ──────────────────────────────────────────────────
+COPY llm_dev_configs/llm_dev.env /home/dev/.env
+RUN chown dev:dev /home/dev/.env && chmod 600 /home/dev/.env
+
 # ── 10. Switch to dev user for remaining setup ─────────────────────────────
 USER dev
 WORKDIR /home/dev

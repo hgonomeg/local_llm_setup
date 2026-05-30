@@ -30,10 +30,15 @@ docker compose up -d searxng_llm
 # 2. Pull all models and create context-size variants (~80GB download)
 docker exec ollama_palace bash /ollama_palace_init.sh
 
-# 3. Build the dev image
+# 3. Add API keys to `llm_dev_configs/llm_dev.env` before building the dev image
+echo 'DEEPSEEK_API_KEY=sk-your-deepseek-key' > llm_dev_configs/llm_dev.env
+#
+# llm_dev_configs/llm_dev.env can be empty but it has to exist.
+
+# 4. Build the dev image
 docker compose build --progress plain llm_dev
 
-# 4. Spawn a dev container
+# 5. Spawn a dev container
 docker compose run --rm -v `pwd`:/workspace llm_dev
 docker compose run --rm -v /path/to/project:/workspace llm_dev
 
@@ -103,12 +108,12 @@ docker compose run --rm -v /path/to/project:/workspace llm_dev
 # Inside the container:
 opencode                    # Launch OpenCode agent
 models                      # List all available models
-ollama-ps                   # Show loaded models + GPU usage
-ollama-test gemma4-26b-64k  # Benchmark a model
+ollama_ps                   # Show loaded models + GPU usage
+ollama_test gemma4-26b-64k  # Benchmark a model
+ollama_claude               # Claude Code backed by local Ollama models
+deepseek_claude             # Claude Code backed by DeepSeek API
 
 ```
-
-
 ## Volumes
 
 | Volume | Purpose | Persists across |
