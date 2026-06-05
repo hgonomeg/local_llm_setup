@@ -27,15 +27,16 @@ sed "s|CHANGE_ME|$(openssl rand -hex 32)|" searxng_configs/settings.yml.template
 # 2.2. Start the Searxng container (for web searches in the dev container)
 docker compose up -d searxng_llm
 
-# 2. Pull all models and create context-size variants (~80GB download)
+# 3. Pull all models and create context-size variants (~80GB download)
 docker exec ollama_palace bash /ollama_palace_init.sh
 
-# 3. Add API keys to `llm_dev_configs/llm_dev.env` before building the dev image
-echo 'DEEPSEEK_API_KEY=sk-your-deepseek-key' > llm_dev_configs/llm_dev.env
+# 4.1 Add API keys to `llm_dev_configs/llm_dev.env` before building the dev image
 #
-# llm_dev_configs/llm_dev.env can be empty but it has to exist.
+# If you don't have a DeepSeek API key, `llm_dev_configs/llm_dev.env` can be left empty
+# but it has to exist.
+echo 'DEEPSEEK_API_KEY=sk-your-deepseek-key' > llm_dev_configs/llm_dev.env
 
-# 4. Build the dev image
+# 4.2 Build the dev image
 docker compose build --progress plain llm_dev
 
 # 5. Spawn a dev container
@@ -91,8 +92,9 @@ Each base model has 16K, 32K, 64K, 128K and 256K context variants:
 | `qwen3.6:27b-*` | Dense | 27B | ~17GB | Agentic coding, tool use (better analysis; much slower) |
 | `qwen3.5:35b-a3b-*` | MoE | 3B | ~24GB | Agentic coding, tool use |
 | `qwen3.6:35b-a3b-*` | MoE | 3B | ~24GB? | Agentic coding, tool use |
-| `gemma4:26b-*` | MoE | 3.8B | ~18GB | Pure coding, multilingual |
 | `gemma4:e4b-*` | Dense | 4.5B | ~6GB | Ultra-fast, fits in 8GB VRAM |
+| `gemma4:12b-*` | Dense | 12B  |  ?   | ? |
+| `gemma4:26b-*` | MoE | 3.8B | ~18GB | Pure coding, multilingual |
 | `qemma4:31b-*` | Dense | 31B | ? | Agentic coding, tool use (better analysis; much slower) |
 
 

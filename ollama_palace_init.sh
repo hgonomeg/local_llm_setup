@@ -21,8 +21,9 @@ BASE_MODELS=(
   "qwen3.5:9b"
   "qwen3.6:27b"
   "qwen3.6:35b-a3b"
-  "gemma4:26b"
   "gemma4:e4b"
+  "gemma4:12b"
+  "gemma4:26b"
   "gemma4:31b"
 )
 
