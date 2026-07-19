@@ -104,7 +104,7 @@ services:
       - llm_net
 
   open_webui:
-    image: ghcr.io/open-webui/open-webui:v0.9.4
+    image: ghcr.io/open-webui/open-webui:v0.10.2
     container_name: open_webui
     restart: unless-stopped
     ports:
@@ -119,14 +119,17 @@ services:
       - WEBUI_AUTH=False # skip login for single-user
       # The 'default' loader is just broken and instantly fails.
       # We need to use playwright
-      - WEB_LOADER_ENGINE=playwright
+      - RAG_WEB_LOADER_ENGINE=playwright
+      # ↓ DEPRECATED since v0.10.0 — replaced by RAG_WEB_LOADER_ENGINE
+      # - WEB_LOADER_ENGINE=playwright
       - PLAYWRIGHT_WS_URL=ws://playwright:11437
       # What does this do?? Is this used at all?
       - ENABLE_RAG_WEB_SEARCH=True
-      - ENABLE_WEB_SEARCH=True
+      # ↓ DEPRECATED since v0.10.0 — replaced by ENABLE_RAG_WEB_SEARCH
+      # - ENABLE_WEB_SEARCH=True
       - RAG_WEB_SEARCH_ENGINE="searxng"
-      # is this used?
-      - WEB_SEARCH_ENGINE="searxng"
+      # ↓ DEPRECATED since v0.10.0 — replaced by RAG_WEB_SEARCH_ENGINE
+      # - WEB_SEARCH_ENGINE="searxng"
       - RAG_EMBEDDING_ENGINE="ollama"
       - RAG_EMBEDDING_MODEL="qwen3-embedding:8b"
       # The default of 3 is ridiculously bad
@@ -159,10 +162,10 @@ services:
       - llm_net
       
   playwright:
-    image: mcr.microsoft.com/playwright:v1.58.0-noble
+    image: mcr.microsoft.com/playwright:v1.60.0-noble
     container_name: playwright
     restart: unless-stopped
-    command: npx -y playwright@1.58.0 run-server --port 11437 --host 0.0.0.0
+    command: npx -y playwright@1.60.0 run-server --port 11437 --host 0.0.0.0
     networks:
       - llm_net
 
