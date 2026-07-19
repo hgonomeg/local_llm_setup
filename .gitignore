@@ -4,3 +4,6 @@
 
 # Docker build cache
 .docker/
+
+# Build-time secrets (not committed)
+llm_dev_configs/llm_dev.env

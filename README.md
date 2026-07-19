@@ -27,13 +27,19 @@ sed "s|CHANGE_ME|$(openssl rand -hex 32)|" searxng_configs/settings.yml.template
 # 2.2. Start the Searxng container (for web searches in the dev container)
 docker compose up -d searxng_llm
 
-# 2. Pull all models and create context-size variants (~80GB download)
+# 3. Pull all models and create context-size variants (~80GB download)
 docker exec ollama_palace bash /ollama_palace_init.sh
 
-# 3. Build the dev image
+# 4.1 Add API keys to `llm_dev_configs/llm_dev.env` before building the dev image
+#
+# If you don't have a DeepSeek API key, `llm_dev_configs/llm_dev.env` can be left empty
+# but it has to exist.
+echo 'DEEPSEEK_API_KEY=sk-your-deepseek-key' > llm_dev_configs/llm_dev.env
+
+# 4.2 Build the dev image
 docker compose build --progress plain llm_dev
 
-# 4. Spawn a dev container
+# 5. Spawn a dev container
 docker compose run --rm -v `pwd`:/workspace llm_dev
 docker compose run --rm -v /path/to/project:/workspace llm_dev
 
@@ -86,8 +92,9 @@ Each base model has 16K, 32K, 64K, 128K and 256K context variants:
 | `qwen3.6:27b-*` | Dense | 27B | ~17GB | Agentic coding, tool use (better analysis; much slower) |
 | `qwen3.5:35b-a3b-*` | MoE | 3B | ~24GB | Agentic coding, tool use |
 | `qwen3.6:35b-a3b-*` | MoE | 3B | ~24GB? | Agentic coding, tool use |
-| `gemma4:26b-*` | MoE | 3.8B | ~18GB | Pure coding, multilingual |
 | `gemma4:e4b-*` | Dense | 4.5B | ~6GB | Ultra-fast, fits in 8GB VRAM |
+| `gemma4:12b-*` | Dense | 12B  |  ?   | ? |
+| `gemma4:26b-*` | MoE | 3.8B | ~18GB | Pure coding, multilingual |
 | `qemma4:31b-*` | Dense | 31B | ? | Agentic coding, tool use (better analysis; much slower) |
 
 
@@ -103,12 +110,12 @@ docker compose run --rm -v /path/to/project:/workspace llm_dev
 # Inside the container:
 opencode                    # Launch OpenCode agent
 models                      # List all available models
-ollama-ps                   # Show loaded models + GPU usage
-ollama-test gemma4-26b-64k  # Benchmark a model
+ollama_ps                   # Show loaded models + GPU usage
+ollama_test gemma4-26b-64k  # Benchmark a model
+ollama_claude               # Claude Code backed by local Ollama models
+deepseek_claude             # Claude Code backed by DeepSeek API
 
 ```
-
-
 ## Volumes
 
 | Volume | Purpose | Persists across |

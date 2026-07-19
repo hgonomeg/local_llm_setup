@@ -53,10 +53,21 @@ ollama_test() {
 }
 
 ollama_claude() {
-    export ANTHROPIC_AUTH_TOKEN=ollama
-    export ANTHROPIC_API_KEY=""
-    export ANTHROPIC_BASE_URL="http://172.23.215.20:11434"
-    claude "$@"
+  ANTHROPIC_AUTH_TOKEN=ollama \
+  ANTHROPIC_API_KEY="" \
+  ANTHROPIC_BASE_URL="http://172.23.215.20:11434" \
+  claude "$@"
+}
+
+# ── Load build-time secrets ───────────────────────────────────────────────
+[ -f ~/.env ] && source ~/.env
+
+deepseek_claude() {
+  ANTHROPIC_BASE_URL=https://api.deepseek.com/anthropic \
+  ANTHROPIC_AUTH_TOKEN=$DEEPSEEK_API_KEY \
+  ANTHROPIC_MODEL=deepseek-v4-pro \
+  CLAUDE_CODE_EFFORT_LEVEL=max \
+  claude "$@"
 }
 
 # ── Environment ─────────────────────────────────────────────────────────────
@@ -80,5 +91,6 @@ echo "│  models                        — list available Ollama models       
 echo "│  ollama_ps                     — show loaded models + GPU usage         │"
 echo "│  oc / opencode                 — launch OpenCode agent                  │"
 echo "│  ollama_claude --model [model] - launch Claude Code with local LLMs     │"
+echo "│  deepseek_claude               - launch Claude Code via DeepSeek API    │"
 echo "│  ollama_test [model]           — benchmark a model                      │"
 echo "└─────────────────────────────────────────────────────────────────────────┘"
