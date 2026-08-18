@@ -7,7 +7,7 @@
 #   docker compose run --rm llm_dev          # Spawn a throwaway dev shell
 #   docker compose run --rm llm_dev opencode # Jump straight into OpenCode
 ##############################################################################
-
+name: llm-dev-stack
 services:
   # ──────────────────────────────────────────────────────────────────────────
   # Ollama — GPU-accelerated LLM inference server
