@@ -43,7 +43,8 @@ docker compose build --progress plain llm_dev
 docker compose run --rm -v `pwd`:/workspace llm_dev
 docker compose run --rm -v /path/to/project:/workspace llm_dev
 
-# Optionally you can also set up a nice web UI for Ollama
+# 6.0. Optionally you can also set up a nice web UI for Ollama
+grep -q WEBUI_SECRET_KEY .env 2>/dev/null || echo WEBUI_SECRET_KEY=$(openssl rand -hex 32) >> .env
 docker compose up -d open_webui
 ```
 
