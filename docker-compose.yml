@@ -114,17 +114,31 @@ services:
       # - "172.23.215.20:11436:8080"
     volumes:
       - openwebui_data:/app/backend/data
+    sysctls:
+      - net.ipv4.tcp_keepalive_time=30
+      - net.ipv4.tcp_keepalive_intvl=5
+      - net.ipv4.tcp_keepalive_probes=5
     environment:
       # OpenWebUI has a nasty tendency to hang when there is anything wrong with the connection
       # be it a DNS issue or anything else, it just fucking gets stuck and does nothing,
       # no errors, zero feedback, just stuck, while you try to diagnoze what's happening,
       # like an idiot.
-      - AIOHTTP_CLIENT_TIMEOUT=15
+      # Also, you cannot set the timeout to aggressive values like 15 seconds,
+      # because this also happens to be the total time for which the interface waits for the provider to generate the response.
+      # For hanging connections, see the `sysctls` section.
+      #
+      # Ten minutes should be enough for a response from a provider...
+      - AIOHTTP_CLIENT_TIMEOUT=600
+      # For Ollama, we want no ceiling for response time...
+      - AIOHTTP_CLIENT_TIMEOUT_OLLAMA=0
       - AIOHTTP_CLIENT_TIMEOUT_MODEL_LIST=5
       - OLLAMA_BASE_URL=http://ollama_palace:11434
       # I fucking hate OpenWebUI, it's such a vibe coded piece of shit
       # Constant issues with EVERYTHING
       - GLOBAL_LOG_LEVEL=DEBUG
+      # This prevents relaunches of the docking container from invalidating all automatically generated login tokens.
+      # This token is generated with: openssl rand -hex 32; Look at README.md for reference
+      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY:?You did not set WEBUI_SECRET_KEY in .env}
       - WEBUI_AUTH=False # skip login for single-user
       # The 'default' loader is just broken and instantly fails.
       # We need to use playwright

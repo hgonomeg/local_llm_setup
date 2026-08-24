@@ -7,3 +7,8 @@
 
 # Build-time secrets (not committed)
 llm_dev_configs/llm_dev.env
+
+searxng_configs/settings.yml
+searxng_configs/settings.yml.new
+
+.env
