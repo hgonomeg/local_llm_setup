@@ -115,6 +115,12 @@ services:
     volumes:
       - openwebui_data:/app/backend/data
     environment:
+      # OpenWebUI has a nasty tendency to hang when there is anything wrong with the connection
+      # be it a DNS issue or anything else, it just fucking gets stuck and does nothing,
+      # no errors, zero feedback, just stuck, while you try to diagnoze what's happening,
+      # like an idiot.
+      - AIOHTTP_CLIENT_TIMEOUT=15
+      - AIOHTTP_CLIENT_TIMEOUT_MODEL_LIST=5
       - OLLAMA_BASE_URL=http://ollama_palace:11434
       # I fucking hate OpenWebUI, it's such a vibe coded piece of shit
       # Constant issues with EVERYTHING
