@@ -7,7 +7,7 @@
 #   docker compose run --rm llm_dev          # Spawn a throwaway dev shell
 #   docker compose run --rm llm_dev opencode # Jump straight into OpenCode
 ##############################################################################
-
+name: llm-dev-stack
 services:
   # ──────────────────────────────────────────────────────────────────────────
   # Ollama — GPU-accelerated LLM inference server
@@ -115,7 +115,16 @@ services:
     volumes:
       - openwebui_data:/app/backend/data
     environment:
+      # OpenWebUI has a nasty tendency to hang when there is anything wrong with the connection
+      # be it a DNS issue or anything else, it just fucking gets stuck and does nothing,
+      # no errors, zero feedback, just stuck, while you try to diagnoze what's happening,
+      # like an idiot.
+      - AIOHTTP_CLIENT_TIMEOUT=15
+      - AIOHTTP_CLIENT_TIMEOUT_MODEL_LIST=5
       - OLLAMA_BASE_URL=http://ollama_palace:11434
+      # I fucking hate OpenWebUI, it's such a vibe coded piece of shit
+      # Constant issues with EVERYTHING
+      - GLOBAL_LOG_LEVEL=DEBUG
       - WEBUI_AUTH=False # skip login for single-user
       # The 'default' loader is just broken and instantly fails.
       # We need to use playwright
@@ -139,8 +148,6 @@ services:
       # Not to overwhelm the model context...
       - WEB_SEARCH_RESULT_COUNT=8
       - WEB_SEARCH_CONCURRENT_REQUESTS=10
-      # Not needed, rigt?
-      # - WEB_SEARCH_TRUST_ENV=True
       # For a small list of fetched websites, this makes sense.
       # For an extensive list of fetched websites, this will lead to the model's context clogging.
       # Adjust this in the Admin panel when needed.

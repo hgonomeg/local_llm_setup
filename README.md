@@ -2,7 +2,7 @@
 
 Local, GPU-accelerated LLM development environment using Docker.
 
-**Ollama** serves models (Qwen 3.5, Qwen 3.6, Gemma 4) with NVIDIA GPU passthrough.
+**Ollama** serves models (Qwen 3.5, Qwen 3.6, Qwen 3.8, Gemma 4) with NVIDIA GPU passthrough.
 **Arch Linux** container provides a full dev toolchain + OpenCode agentic coding.
 
 ## Prerequisites
@@ -89,8 +89,7 @@ Each base model has 16K, 32K, 64K, 128K and 256K context variants:
 |-------|------|--------------|----------|----------|
 | `qwen3.5:4b-*` | Dense | 4B | ? | Super-fast fallback |
 | `qwen3.5:9b-*` | Dense | 9B | ~6GB | Fast fallback, fits in 8GB VRAM |
-| `qwen3.6:27b-*` | Dense | 27B | ~17GB | Agentic coding, tool use (better analysis; much slower) |
-| `qwen3.5:35b-a3b-*` | MoE | 3B | ~24GB | Agentic coding, tool use |
+| `qwen3.8:27b-*` | Dense | 27B | ~17GB | Agentic coding, tool use (better analysis; much slower) |
 | `qwen3.6:35b-a3b-*` | MoE | 3B | ~24GB? | Agentic coding, tool use |
 | `gemma4:e4b-*` | Dense | 4.5B | ~6GB | Ultra-fast, fits in 8GB VRAM |
 | `gemma4:12b-*` | Dense | 12B  |  ?   | ? |
@@ -124,6 +123,6 @@ deepseek_claude             # Claude Code backed by DeepSeek API
 
 ## Tips
 
-- **Model too slow?** Drop to a smaller context: `qwen3.5-35b-a3b-32k` instead of `128k`
+- **Model too slow?** Drop to a smaller context: `qwen3.6-35b-a3b-32k` instead of `128k`
 - **VRAM full?** Use `gemma4-e4b-*` or `qwen3.5-9b-*` — they fit entirely in 8GB
 - **OpenCode tools not working?** Ensure model has `"tools": true` in config and context >= 32K
