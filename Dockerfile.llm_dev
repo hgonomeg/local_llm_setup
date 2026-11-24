@@ -87,6 +87,9 @@ ENV HOME=/home/dev
 
 # ── Install non-root tools ───────────────────────────────────────────────────
 RUN git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si --noconfirm && cd .. && rm -rf yay
+# The base image's pacman.conf skips extracting usr/share/doc/*, but git-extras
+# ships its zsh completion there. Whitelist it (last matching NoExtract pattern wins).
+RUN sudo sed -i '\|usr/share/doc/\*|a NoExtract  = !usr/share/doc/git-extras/*' /etc/pacman.conf
 RUN yay -S --noconfirm --needed git-extras fzf-extras
 RUN curl -fsSL https://opencode.ai/install | bash
 ## Also add Claude

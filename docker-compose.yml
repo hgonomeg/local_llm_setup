@@ -104,7 +104,7 @@ services:
       - llm_net
 
   open_webui:
-    image: ghcr.io/open-webui/open-webui:v0.10.2
+    image: ghcr.io/open-webui/open-webui:v0.13.4
     container_name: open_webui
     restart: unless-stopped
     ports:
@@ -123,14 +123,13 @@ services:
       # be it a DNS issue or anything else, it just fucking gets stuck and does nothing,
       # no errors, zero feedback, just stuck, while you try to diagnoze what's happening,
       # like an idiot.
-      # Also, you cannot set the timeout to aggressive values like 15 seconds,
-      # because this also happens to be the total time for which the interface waits for the provider to generate the response.
-      # For hanging connections, see the `sysctls` section.
-      #
-      # Ten minutes should be enough for a response from a provider...
-      - AIOHTTP_CLIENT_TIMEOUT=600
-      # For Ollama, we want no ceiling for response time...
-      - AIOHTTP_CLIENT_TIMEOUT_OLLAMA=0
+      # AIOHTTP_CLIENT_TIMEOUT is a *total* cap on every provider request (Ollama included,
+      # there is no Ollama-specific timeout), so it cannot be aggressive without killing
+      # long generations. Empty = no total cap.
+      # Hung/silent connections are instead killed by the idle timeout below
+      # (no bytes received for N seconds), plus the `sysctls` keepalive section.
+      - AIOHTTP_CLIENT_TIMEOUT=
+      - AIOHTTP_CLIENT_STREAM_IDLE_TIMEOUT=120
       - AIOHTTP_CLIENT_TIMEOUT_MODEL_LIST=5
       - OLLAMA_BASE_URL=http://ollama_palace:11434
       # I fucking hate OpenWebUI, it's such a vibe coded piece of shit
@@ -140,24 +139,20 @@ services:
       # This token is generated with: openssl rand -hex 32; Look at README.md for reference
       - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY:?You did not set WEBUI_SECRET_KEY in .env}
       - WEBUI_AUTH=False # skip login for single-user
+      # NOTE: Do not quote values in this list-style `environment:` block —
+      # the quotes become part of the value (e.g. `"searxng"` with quotes).
       # The 'default' loader is just broken and instantly fails.
-      # We need to use playwright
-      - RAG_WEB_LOADER_ENGINE=playwright
-      # ↓ DEPRECATED since v0.10.0 — replaced by RAG_WEB_LOADER_ENGINE
-      # - WEB_LOADER_ENGINE=playwright
+      # We need to use playwright (keep its version in sync with OpenWebUI's
+      # backend/requirements.txt, see the `playwright` service below)
+      - WEB_LOADER_ENGINE=playwright
       - PLAYWRIGHT_WS_URL=ws://playwright:11437
-      # What does this do?? Is this used at all?
-      - ENABLE_RAG_WEB_SEARCH=True
-      # ↓ DEPRECATED since v0.10.0 — replaced by ENABLE_RAG_WEB_SEARCH
-      # - ENABLE_WEB_SEARCH=True
-      - RAG_WEB_SEARCH_ENGINE="searxng"
-      # ↓ DEPRECATED since v0.10.0 — replaced by RAG_WEB_SEARCH_ENGINE
-      # - WEB_SEARCH_ENGINE="searxng"
-      - RAG_EMBEDDING_ENGINE="ollama"
-      - RAG_EMBEDDING_MODEL="qwen3-embedding:8b"
-      # The default of 3 is ridiculously bad
+      - ENABLE_WEB_SEARCH=True
+      - WEB_SEARCH_ENGINE=searxng
+      - RAG_EMBEDDING_ENGINE=ollama
+      - RAG_EMBEDDING_MODEL=qwen3-embedding:8b
+      # The default used to be 3 (10 since v0.13.1)
       - RAG_TOP_K=8
-      - SEARXNG_QUERY_URL="http://searxng_llm:8080/search?q=<query>"
+      - SEARXNG_QUERY_URL=http://searxng_llm:8080/search?q=<query>
       # This may need tinkering, especially without embedding+retrieval
       # Not to overwhelm the model context...
       - WEB_SEARCH_RESULT_COUNT=8

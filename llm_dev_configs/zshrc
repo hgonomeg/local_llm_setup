@@ -4,7 +4,6 @@ source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-# This package (git-extras) seems to be broken somehow...
 source /usr/share/doc/git-extras/git-extras-completion.zsh
 . /usr/share/fzf/fzf-extras.zsh
 
